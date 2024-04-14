@@ -63,3 +63,35 @@ void PrintWchar()
     std::wcout.imbue(std::locale("zh_CN"));
     std::wcout << L"你好，世界" << std::endl;
 ```
+
+## 解决`std::cout` 输出中文乱码
+
+### 方法1. 通过system命令修改编码
+
+```c++
+#include <iostream>
+int main()
+{
+    system("chcp 65001"); //只要执行一次。就能解决此问题，执行一次后，注释掉此行代码。
+    std::cout << "你好，世界" << std::endl;
+}
+```
+
+### 方法2. 命令行执行`chcp`命令
+
+```bash
+chcp 65001
+```
+
+### 方法3， 通过SetConsoleOutputCP函数修改编码
+
+```c++
+#include <iostream>
+#include <Windows.h>
+
+int main()
+{
+    SetConsoleOutputCP(CP_UTF8);
+    std::cout << "你好，世界" << std::endl;
+}
+```
