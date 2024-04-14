@@ -72,7 +72,7 @@ void PrintWchar()
 #include <iostream>
 int main()
 {
-    system("chcp 65001"); //只要执行一次。就能解决此问题，执行一次后，注释掉此行代码。
+    system("chcp 65001");
     std::cout << "你好，世界" << std::endl;
 }
 ```
