@@ -15,6 +15,20 @@
 std::locale::global(std::locale(""));
 ```
 
+## `wprintf`输出支持中文
+
+```c++
+#include <stdio.h>
+#include <locale>
+int main()
+{
+    setlocale(LC_ALL, "chs");
+    std::wstring name(L"你好，世界！");
+    wprintf (L"%ls \n", name.c_str());
+}
+
+```
+
 ## locale 对象方法
 
 - std::string name() const  返回locale的名称
@@ -83,7 +97,7 @@ int main()
 chcp 65001
 ```
 
-### 方法3， 通过SetConsoleOutputCP函数修改编码
+### 方法3， 通过`SetConsoleOutputCP`函数修改编码
 
 ```c++
 #include <iostream>
