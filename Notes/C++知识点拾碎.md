@@ -14,13 +14,14 @@ std::string contex((std::istreambuf_iterator<char>(file)), std::istreambuf_itera
 
 这里构造了`std::istreambuf`的迭代器，所以可以直接使用构造函数传入。
 
-## enum class
+## `enum class`
 
-原本兼容C的enum有如下特点：
+原本兼容C的`enum`有如下特点：
 
 - 枚举项是公开的，在全局下是全局的，在类中是属于类的
 - 可以隐式转换为整型
   
+
 第一点导致在同一作用域下不同的枚举类型不能够声明相同的枚举项：
 
 ```C++
@@ -197,3 +198,39 @@ int main() {
 然后用`top -pid`命令打印出这个程序的信息，查看`MEM`字段，
 
 如果其字段恒定不变的话，就没有泄漏，如果一直在增长就是泄漏了。
+
+## 数组做参数退化为指针
+数组退化：在 C++ 中，数组在作为函数参数时会退化为指向其首元素的指针。
+
+退化的原因是因为数组作为函数参数时，实际传递的是指向数组首元素的指针，不可能逐个拷贝整个数组然后在栈上传递，所以编译器只知道参数是一个指针，而不知道它的长度信息。
+
+但是，当数组直接作为 `sizeof`的参数时，它不会退化，因为`sizeof`是编译器在编译期间计算的结果，这个时候编译器是有信息知道数组的大小。
+
+为了在函数中获取数组的长度，需要将数组的长度作为另一个参数传递给函数，或者使用模板实现。
+
+## 数组的引用做参数
+
+```c++
+#include <iostream>
+#include <cstring>
+template <typename T, std::size_t N>
+void printSizeAndLength(const T (&arr)[N]) {
+    std::cout << "Size of arr in function: " << sizeof(arr) << std::endl; // 计算数组的大小
+    std::cout << "Length of arr: " << strlen(arr) << std::endl; // 计算字符串的长度
+}
+int main() {
+    char str[] = "Hello, world!";
+    std::cout << "Size of str in main: " << sizeof(str) << std::endl; // 计算整个字符数组的大小
+    printSizeAndLength(str);
+}
+//Size of str in main: 14
+//Size of arr in function: 14
+//Length of arr: 13
+```
+
+这段代码使用了模板函数`printSizeAndLength`，它接受一个数组引用作为参数。
+
+在函数内部，使用`sizeof`计算数组大小时，数组不会退化为指针。
+
+引用的作用就在于阻止拷贝的发生，通过传递引用，让形参得到和数组同样的地址。
+
